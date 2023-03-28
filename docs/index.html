@@ -13,8 +13,8 @@
 <div class="tsd-page-title">
 <h2>@ixo/jambo-wallet-sdk</h2></div>
 <div class="tsd-panel tsd-typography">
-<a href="#jambo-wallet-sdk" id="jambo-wallet-sdk" style="color: inherit; text-decoration: none;">
-  <h1>JAMBO WALLET SDK</h1>
+<a href="#jambo-wallet-sdk-💼" id="jambo-wallet-sdk-💼" style="color: inherit; text-decoration: none;">
+  <h1>JAMBO WALLET SDK 💼</h1>
 </a>
 <p><img src="https://img.shields.io/github/contributors/ixofoundation/jambo-wallet-sdk" alt="GitHub contributors">
 <img src="https://img.shields.io/github/repo-size/ixofoundation/jambo-wallet-sdk" alt="GitHub repo size">
@@ -33,25 +33,69 @@
 
 <br />
 
+<p>This repo and product is intentionally managed as Open Source and we aim to use this guide to light our way <a href="https://opensource.guide/">https://opensource.guide/</a>.
+Let us know how we are doing!</p>
 
-<a href="#install" id="install" style="color: inherit; text-decoration: none;">
-  <h2>Install</h2>
+<a href="#🔨-install" id="🔨-install" style="color: inherit; text-decoration: none;">
+  <h2>🔨 Install</h2>
 </a>
 <pre><code class="language-sh"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">@ixo/jambo-wallet-sdk</span><br/><br/><span class="hl-0">yarn </span><span class="hl-1">add</span><span class="hl-0">  </span><span class="hl-1">@ixo/jambo-wallet-sdk</span>
 </code></pre>
 
-<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-  <h2>Usage</h2>
+<a href="#💻-usage" id="💻-usage" style="color: inherit; text-decoration: none;">
+  <h2>💻 Usage</h2>
 </a>
-<p>To use the SDK, you can call the <code>getOpera</code> function, which returns an object of methods similar to the <strong>Keplr</strong> browser wallet if it can access the Opera mobile wallet. Otherwise, it returns undefined.</p>
+<p>This SDK interacts with the Opera mobile wallet and exposes new functions that&#39;ll make interaction with the wallet easier, and these exposed functions mimic the same structure as the Keplr browser extension wallet.</p>
+<p>To use the SDK, you can call the <code>getOpera</code> function, which returns an object of methods similar to the Keplr wallet if it can access the Opera mobile wallet. Otherwise, it returns undefined.</p>
 <pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">getOpera</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@ixo/jambo-wallet-sdk&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">operaWallet</span><span class="hl-0"> = </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-6">getOpera</span><span class="hl-0">();</span><br/><br/><span class="hl-2">if</span><span class="hl-0"> (</span><span class="hl-3">operaWallet</span><span class="hl-0">) {</span><br/><span class="hl-0">    </span><span class="hl-7">// interact with the opera mobile wallet using the SDK</span><br/><span class="hl-0">}</span>
 </code></pre>
 <p>The <code>OperaWallet</code> object returned by <code>getOpera()</code> includes the following functions:</p>
 
-<a href="#disable" id="disable" style="color: inherit; text-decoration: none;">
-  <h3>disable()</h3>
+<a href="#enable" id="enable" style="color: inherit; text-decoration: none;">
+  <h3>enable</h3>
 </a>
-<p>Removes chain info from session storage.</p>
+<pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">enable</span><span class="hl-0">(</span><span class="hl-3">chainNameOrId</span><span class="hl-0">: </span><span class="hl-3">string</span><span class="hl-0">, </span><span class="hl-3">chainNetwork</span><span class="hl-0">: </span><span class="hl-3">ChainNetwork</span><span class="hl-0"> = </span><span class="hl-1">&#39;mainnet&#39;</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-4">void</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p>Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the <a href="https://www.npmjs.com/package/@ixo/jambo-chain-sdk">@ixo/jambo-chain-sdk</a> from the Cosmos or Keplr chain registries and stores is locally for further usage.</p>
+
+<a href="#experimentalsuggestchain" id="experimentalsuggestchain" style="color: inherit; text-decoration: none;">
+  <h3>experimentalSuggestChain</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">experimentalSuggestChain</span><span class="hl-0">(</span><span class="hl-3">chainInfo</span><span class="hl-0">: </span><span class="hl-3">KeplrChainInfo</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-4">void</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p>Suggests a new or custom chain by providing a chain info object. This is very useful if the chain info cannot be found by the <a href="https://www.npmjs.com/package/@ixo/jambo-chain-sdk">@ixo/jambo-chain-sdk</a>.</p>
+
+<a href="#getkey" id="getkey" style="color: inherit; text-decoration: none;">
+  <h3>getKey</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">getKey</span><span class="hl-0">(</span><span class="hl-3">chainId</span><span class="hl-0">: </span><span class="hl-3">string</span><span class="hl-0">, </span><span class="hl-3">includeDid</span><span class="hl-0">: </span><span class="hl-3">boolean</span><span class="hl-0"> = </span><span class="hl-4">false</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-3">OperaKey</span><span class="hl-0"> | </span><span class="hl-4">undefined</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p>Gets the account key for the given chain ID. This key includes the account&#39;s name (empty string), the algorithm (secp), pubKey, address, bech32Address and the DID (Decentralized Identifier) if the includeDid flag is set to true.</p>
+
+<a href="#getofflinesigner" id="getofflinesigner" style="color: inherit; text-decoration: none;">
+  <h3>getOfflineSigner</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">getOfflineSigner</span><span class="hl-0">(</span><span class="hl-3">chainId</span><span class="hl-0">: </span><span class="hl-3">string</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-3">OfflineDirectSigner</span><span class="hl-0"> | </span><span class="hl-4">null</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p>Returns an offline signer for the given chain ID.</p>
+
+<a href="#signdirect" id="signdirect" style="color: inherit; text-decoration: none;">
+  <h3>signDirect</h3>
+</a>
+<pre><code class="language-ts"><span class="hl-6">signDirect</span><span class="hl-0">(</span><span class="hl-3">signerAddress</span><span class="hl-0">: </span><span class="hl-3">string</span><span class="hl-0">, </span><span class="hl-3">signDoc</span><span class="hl-0">: </span><span class="hl-3">SignDoc</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-3">DirectSignResponse</span><span class="hl-0">&gt;</span>
+</code></pre>
+<p>Signs a transaction with the specified signer address.</p>
+
+<a href="#📱-example" id="📱-example" style="color: inherit; text-decoration: none;">
+  <h2>📱 Example</h2>
+</a>
+<pre><code class="language-ts"><span class="hl-7">// initialize opera with custom chain info</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">initializeOpera</span><span class="hl-0"> = </span><span class="hl-4">async</span><span class="hl-0"> (</span><span class="hl-3">chainInfo</span><span class="hl-0">: </span><span class="hl-8">ChainInfo</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-8">Key</span><span class="hl-0"> | </span><span class="hl-8">undefined</span><span class="hl-0">&gt; </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">try</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">opera</span><span class="hl-0"> = </span><span class="hl-6">getOpera</span><span class="hl-0">();</span><br/><span class="hl-0">        </span><span class="hl-2">if</span><span class="hl-0"> (!</span><span class="hl-3">opera</span><span class="hl-0">) </span><span class="hl-2">return</span><span class="hl-0">;</span><br/><span class="hl-0">        </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">opera</span><span class="hl-0">.</span><span class="hl-6">experimentalSuggestChain</span><span class="hl-0">(</span><span class="hl-3">chainInfo</span><span class="hl-0">);</span><br/><span class="hl-0">        </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">opera</span><span class="hl-0">.</span><span class="hl-6">enable</span><span class="hl-0">(</span><span class="hl-3">chainInfo</span><span class="hl-0">.</span><span class="hl-3">chainId</span><span class="hl-0">);</span><br/><span class="hl-0">        </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">key</span><span class="hl-0"> = </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">opera</span><span class="hl-0">.</span><span class="hl-6">getKey</span><span class="hl-0">(</span><span class="hl-3">chainInfo</span><span class="hl-0">.</span><span class="hl-3">chainId</span><span class="hl-0">);</span><br/><span class="hl-0">        </span><span class="hl-2">return</span><span class="hl-0"> </span><span class="hl-3">key</span><span class="hl-0">;</span><br/><span class="hl-0">    } </span><span class="hl-2">catch</span><span class="hl-0"> (</span><span class="hl-3">error</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">error</span><span class="hl-0">(</span><span class="hl-1">&#39;Error initializing Opera:: &#39;</span><span class="hl-0"> + </span><span class="hl-3">error</span><span class="hl-0">);</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">};</span><br/><br/><span class="hl-7">// initialize opera using a chain ID</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">chainId</span><span class="hl-0"> = </span><span class="hl-1">&#39;ixo-5&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">initializeOpera</span><span class="hl-0"> = </span><span class="hl-4">async</span><span class="hl-0"> (): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-8">Key</span><span class="hl-0"> | </span><span class="hl-8">undefined</span><span class="hl-0">&gt; </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">try</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">opera</span><span class="hl-0"> = </span><span class="hl-6">getOpera</span><span class="hl-0">();</span><br/><span class="hl-0">        </span><span class="hl-2">if</span><span class="hl-0"> (!</span><span class="hl-3">opera</span><span class="hl-0">) </span><span class="hl-2">return</span><span class="hl-0">;</span><br/><span class="hl-0">        </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">opera</span><span class="hl-0">.</span><span class="hl-6">enable</span><span class="hl-0">(</span><span class="hl-3">chainId</span><span class="hl-0">);</span><br/><span class="hl-0">        </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">key</span><span class="hl-0"> = </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">opera</span><span class="hl-0">.</span><span class="hl-6">getKey</span><span class="hl-0">(</span><span class="hl-3">chainId</span><span class="hl-0">);</span><br/><span class="hl-0">        </span><span class="hl-2">return</span><span class="hl-0"> </span><span class="hl-3">key</span><span class="hl-0">;</span><br/><span class="hl-0">    } </span><span class="hl-2">catch</span><span class="hl-0"> (</span><span class="hl-3">error</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">error</span><span class="hl-0">(</span><span class="hl-1">&#39;Error initializing Opera:: &#39;</span><span class="hl-0"> + </span><span class="hl-3">error</span><span class="hl-0">);</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">};</span>
+</code></pre>
+
+<a href="#📃-license" id="📃-license" style="color: inherit; text-decoration: none;">
+  <h2>📃 License</h2>
+</a>
+<p>This SDK is licensed under the Apache 2 License. See the <a href="/LICENSE">LICENSE</a> file for more information.</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
