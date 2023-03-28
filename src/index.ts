@@ -1,6 +1,5 @@
 import {
 	opera_eventListener,
-	opera_disable,
 	opera_enable,
 	opera_experimentalSuggestChain,
 	opera_getKey,
@@ -28,7 +27,6 @@ const opera = {
 	// parseMessage: undefined
 	// version: "0.11.49"
 	// changeKeyRingName: ƒ ()
-	disable: opera_disable,
 	enable: opera_enable,
 	// enigmaDecrypt: ƒ ()
 	// enigmaEncrypt: ƒ ()

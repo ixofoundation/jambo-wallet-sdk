@@ -1,7 +1,7 @@
+import { OPERA_CHAIN_INFOS_KEY, OPERA_PUB_KEYS_KEY } from '../constants/persistence';
+import { getSessionStorage, setSessionStorage } from './persistence';
 import { b64_to_uint8Arr, uint8Arr_to_b64 } from './encoding';
-import { OPERA_CHAIN_INFOS_KEY } from '../constants/persistence';
-import { InterchainWallet } from '../types/opera';
-import { getSessionStorage } from './persistence';
+import { InterchainWallet, OperaKey } from '../types/opera';
 
 declare const window: any;
 declare const global: any;
@@ -71,4 +71,24 @@ export const getBech32PrefixAccAddr = (chainId: string) => {
 	if (!chain) throw new Error(`There is no chain info for ${chainId}`);
 	const bech32AccAddrPrefix = chain.bech32Config.bech32PrefixAccAddr;
 	return bech32AccAddrPrefix;
+};
+
+export const storePubKeys = (chainId: string, key: OperaKey): void => {
+	const pubKeys = getSessionStorage(OPERA_PUB_KEYS_KEY) ?? {};
+	pubKeys[chainId] = key;
+	setSessionStorage(OPERA_PUB_KEYS_KEY, pubKeys);
+};
+
+export const retrievePubKeys = (chainId: string): undefined | OperaKey => {
+	const pubKeys = getSessionStorage(OPERA_PUB_KEYS_KEY) ?? {};
+	const keys = pubKeys[chainId];
+	if (!keys) return undefined;
+	return keys;
+};
+
+export const retrievePubKeysFromAddress = (address: string): undefined | OperaKey => {
+	const pubKeys = getSessionStorage(OPERA_PUB_KEYS_KEY) ?? {};
+	const keys = Object.values(pubKeys).find((key) => key.bech32Address === address);
+	if (!keys) return undefined;
+	return keys;
 };

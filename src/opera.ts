@@ -5,23 +5,25 @@ import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import { getKeplrChainInfo } from '@ixo/jambo-chain-sdk';
 import { sha256 } from '@cosmjs/crypto';
 
-import { getBech32PrefixAccAddr, getDIDDocJSON, getInterchain, transformSignature } from './utils/opera';
+import {
+	getBech32PrefixAccAddr,
+	getDIDDocJSON,
+	getInterchain,
+	retrievePubKeys,
+	retrievePubKeysFromAddress,
+	storePubKeys,
+	transformSignature,
+} from './utils/opera';
 import { b58_to_uint8Arr, convert_bits, decode_bech32, uint8Arr_to_b64 } from './utils/encoding';
-import { getSessionStorage, removeSessionStorage, setSessionStorage } from './utils/persistence';
+import { getSessionStorage, setSessionStorage } from './utils/persistence';
 import { OPERA_CHAIN_INFOS_KEY } from './constants/persistence';
 import { ALGO_SECP, PUB_KEY_TYPE } from './constants/opera';
 import { OperaKey } from './types/opera';
-
-let PUB_VARS: { [chainId: string]: { pubkeyByteArray: Uint8Array; bech32Address: string } } = {};
 
 export const opera_eventListener = {
 	addMessageListener: undefined,
 	postMessage: undefined,
 	removeMessageListener: undefined,
-};
-
-export const opera_disable = async (): Promise<void> => {
-	removeSessionStorage(OPERA_CHAIN_INFOS_KEY);
 };
 
 export const opera_enable = async (chainNameOrId: string, chainNetwork: ChainNetwork = 'mainnet'): Promise<void> => {
@@ -68,10 +70,7 @@ export const opera_getKey = async (chainId: string, includeDid: boolean = false)
 		isKeystone: false,
 	};
 
-	PUB_VARS[chainId] = {
-		pubkeyByteArray,
-		bech32Address,
-	};
+	storePubKeys(chainId, key);
 
 	return includeDid ? { ...key, did } : key;
 };
@@ -83,17 +82,17 @@ export const opera_getOfflineSigner = async (chainId: string): Promise<OfflineDi
 	const opera = getInterchain();
 	if (!opera) return null;
 	const getAccounts = async (): Promise<readonly AccountData[]> => {
-		const pubVars = PUB_VARS[chainId];
-		if (!pubVars) return [];
-		return [{ address: pubVars.bech32Address, algo: ALGO_SECP as Algo, pubkey: pubVars.pubkeyByteArray }];
+		const key = retrievePubKeys(chainId);
+		if (!key) return [];
+		return [{ address: key.bech32Address, algo: ALGO_SECP as Algo, pubkey: key.pubKey }];
 	};
 	const offlineSigner: OfflineDirectSigner = { getAccounts, signDirect: opera_signDirect };
 	return offlineSigner;
 };
 
-export const opera_signDirect = async (chainId: string, signDoc: SignDoc): Promise<DirectSignResponse> => {
-	const pubVars = PUB_VARS[chainId];
-	if (!pubVars) throw new Error(`Cannot find pubKey for ${chainId}`);
+export const opera_signDirect = async (signerAddress: string, signDoc: SignDoc): Promise<DirectSignResponse> => {
+	const key = retrievePubKeysFromAddress(signerAddress);
+	if (!key) throw new Error(`Cannot find key for ${signerAddress}`);
 	const opera = getInterchain();
 	const signBytes = makeSignBytes(signDoc);
 	const sha256msg = sha256(signBytes);
@@ -107,7 +106,7 @@ export const opera_signDirect = async (chainId: string, signDoc: SignDoc): Promi
 		signature: {
 			pub_key: {
 				type: pubkeyType.secp256k1,
-				value: uint8Arr_to_b64(pubVars.pubkeyByteArray),
+				value: uint8Arr_to_b64(key.pubKey),
 			},
 			signature: transformedSignature,
 		},
