@@ -1,0 +1,74 @@
+import { b64_to_uint8Arr, uint8Arr_to_b64 } from './encoding';
+import { OPERA_CHAIN_INFOS_KEY } from '../constants/persistence';
+import { InterchainWallet } from '../types/opera';
+import { getSessionStorage } from './persistence';
+
+declare const window: any;
+declare const global: any;
+declare const globalThis: any;
+const g =
+	typeof globalThis === 'object'
+		? globalThis
+		: typeof window === 'object'
+		? window
+		: typeof global === 'object'
+		? global
+		: null;
+
+export interface OperaInterchain {
+	interchain?: InterchainWallet;
+}
+
+export const getInterchain = (): InterchainWallet | undefined => {
+	if (typeof g !== 'undefined' && g?.interchain) return g.interchain;
+	return undefined;
+};
+
+export function transformSignature(signature: string): string | undefined {
+	const rawArray = b64_to_uint8Arr(signature);
+	// TODO: remove console.log
+	let signatureCosmjsBase64 = '';
+	if (rawArray.length < 64 || rawArray.length > 66) {
+		console.log('operahelper.invalid length');
+		return;
+	} else if (rawArray.length == 64) {
+		signatureCosmjsBase64 = signature;
+	} else if (rawArray.length == 65) {
+		if (rawArray[0] == 0x00) {
+			signatureCosmjsBase64 = uint8Arr_to_b64(rawArray.slice(1, 65));
+		} else if (rawArray[32] == 0x00) {
+			signatureCosmjsBase64 = uint8Arr_to_b64(new Uint8Array([...rawArray.slice(0, 32), ...rawArray.slice(33, 65)]));
+		} else {
+			console.log('operahelper.invalid signature array, length 65');
+		}
+	} else if (rawArray.length == 66) {
+		if (rawArray[0] == 0x00 && rawArray[33] == 0x00) {
+			signatureCosmjsBase64 = uint8Arr_to_b64(new Uint8Array([...rawArray.slice(1, 33), ...rawArray.slice(34, 66)]));
+		} else {
+			console.log('operahelper.invalid signature array, length 66');
+		}
+	}
+	console.log('operahelper.signatureCosmjsBase64', signatureCosmjsBase64);
+	return signatureCosmjsBase64 || undefined;
+}
+
+export const getDIDDocJSON = async () => {
+	try {
+		const opera = getInterchain();
+		const didDoc = await opera?.getDidDoc(0);
+		// setSessionStorage()
+		const didDocJSON = JSON.parse(didDoc ?? '{}');
+		return didDocJSON;
+	} catch (error) {
+		console.error('getDIDDocJSON::', error);
+		throw error;
+	}
+};
+
+export const getBech32PrefixAccAddr = (chainId: string) => {
+	const chains = getSessionStorage(OPERA_CHAIN_INFOS_KEY) ?? {};
+	const chain = chains[chainId];
+	if (!chain) throw new Error(`There is no chain info for ${chainId}`);
+	const bech32AccAddrPrefix = chain.bech32Config.bech32PrefixAccAddr;
+	return bech32AccAddrPrefix;
+};
