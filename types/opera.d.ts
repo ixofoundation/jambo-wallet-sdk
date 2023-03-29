@@ -1,5 +1,5 @@
 import { DirectSignResponse, OfflineDirectSigner } from '@cosmjs/proto-signing';
-import { ChainNetwork, KeplrChainInfo } from '@ixo/jambo-chain-sdk/types/types/chain';
+import { ChainNetwork, KeplrChainInfo } from '@ixo/cosmos-chain-resolver/types/types/chain';
 import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import { OperaKey } from './types/opera';
 export declare const opera_eventListener: {
