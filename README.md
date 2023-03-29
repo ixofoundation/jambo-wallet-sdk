@@ -8,7 +8,7 @@
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
 <p align="center">
-  <img  src="assets/docs/images/github_jambo_wallet_SDK.png"/>
+  <img  src="assets/images/github_jambo_wallet_SDK.png"/>
 </p>
 
 <br />
@@ -54,7 +54,7 @@ The `OperaWallet` object returned by `getOpera()` includes the following functio
 async enable(chainNameOrId: string, chainNetwork: ChainNetwork = 'mainnet'): Promise<void>
 ```
 
-Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the [@ixo/jambo-chain-sdk](https://www.npmjs.com/package/@ixo/jambo-chain-sdk) from the Cosmos or Keplr chain registries and stores is locally for further usage.
+Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the [@ixo/cosmos-chain-resolver](https://www.npmjs.com/package/@ixo/cosmos-chain-resolver) from the Cosmos or Keplr chain registries and stores is locally for further usage.
 
 ### experimentalSuggestChain
 
@@ -62,7 +62,7 @@ Enables a chain with the given chain ID or name-and-network type. If the chain i
 async experimentalSuggestChain(chainInfo: KeplrChainInfo): Promise<void>
 ```
 
-Suggests a new or custom chain by providing a chain info object. This is very useful if the chain info cannot be found by the [@ixo/jambo-chain-sdk](https://www.npmjs.com/package/@ixo/jambo-chain-sdk).
+Suggests a new or custom chain by providing a chain info object. This is very useful if the chain info cannot be found by the [@ixo/cosmos-chain-resolver](https://www.npmjs.com/package/@ixo/cosmos-chain-resolver).
 
 ### getKey
 

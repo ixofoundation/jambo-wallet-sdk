@@ -22,7 +22,7 @@
 <img src="https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white" alt="Medium"></p>
 <p><img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS"><img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></p>
 <p align="center">
-  <img  src="assets/docs/images/github_jambo_wallet_SDK.png"/>
+  <img  src="assets/images/github_jambo_wallet_SDK.png"/>
 </p>
 
 <br />
@@ -56,14 +56,14 @@ Let us know how we are doing!</p>
 </a>
 <pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">enable</span><span class="hl-0">(</span><span class="hl-3">chainNameOrId</span><span class="hl-0">: </span><span class="hl-3">string</span><span class="hl-0">, </span><span class="hl-3">chainNetwork</span><span class="hl-0">: </span><span class="hl-3">ChainNetwork</span><span class="hl-0"> = </span><span class="hl-1">&#39;mainnet&#39;</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-4">void</span><span class="hl-0">&gt;</span>
 </code></pre>
-<p>Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the <a href="https://www.npmjs.com/package/@ixo/jambo-chain-sdk">@ixo/jambo-chain-sdk</a> from the Cosmos or Keplr chain registries and stores is locally for further usage.</p>
+<p>Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the <a href="https://www.npmjs.com/package/@ixo/cosmos-chain-resolver">@ixo/cosmos-chain-resolver</a> from the Cosmos or Keplr chain registries and stores is locally for further usage.</p>
 
 <a href="#experimentalsuggestchain" id="experimentalsuggestchain" style="color: inherit; text-decoration: none;">
   <h3>experimentalSuggestChain</h3>
 </a>
 <pre><code class="language-ts"><span class="hl-3">async</span><span class="hl-0"> </span><span class="hl-6">experimentalSuggestChain</span><span class="hl-0">(</span><span class="hl-3">chainInfo</span><span class="hl-0">: </span><span class="hl-3">KeplrChainInfo</span><span class="hl-0">): </span><span class="hl-8">Promise</span><span class="hl-0">&lt;</span><span class="hl-4">void</span><span class="hl-0">&gt;</span>
 </code></pre>
-<p>Suggests a new or custom chain by providing a chain info object. This is very useful if the chain info cannot be found by the <a href="https://www.npmjs.com/package/@ixo/jambo-chain-sdk">@ixo/jambo-chain-sdk</a>.</p>
+<p>Suggests a new or custom chain by providing a chain info object. This is very useful if the chain info cannot be found by the <a href="https://www.npmjs.com/package/@ixo/cosmos-chain-resolver">@ixo/cosmos-chain-resolver</a>.</p>
 
 <a href="#getkey" id="getkey" style="color: inherit; text-decoration: none;">
   <h3>getKey</h3>

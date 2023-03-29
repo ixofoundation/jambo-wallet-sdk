@@ -1,8 +1,8 @@
 import { DirectSignResponse, makeSignBytes, OfflineDirectSigner, AccountData, Algo } from '@cosmjs/proto-signing';
-import { ChainNetwork, KeplrChainInfo } from '@ixo/jambo-chain-sdk/types/types/chain';
+import { ChainNetwork, KeplrChainInfo } from '@ixo/cosmos-chain-resolver/types/types/chain';
 import { pubkeyType, pubkeyToAddress } from '@cosmjs/amino';
 import { SignDoc } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
-import { getKeplrChainInfo } from '@ixo/jambo-chain-sdk';
+import { getKeplrChainInfo } from '@ixo/cosmos-chain-resolver';
 import { sha256 } from '@cosmjs/crypto';
 
 import {
