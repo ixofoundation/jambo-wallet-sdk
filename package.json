@@ -1,6 +1,6 @@
 {
 	"name": "@ixo/jambo-wallet-sdk",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "An SDK to easily access the Opera mobile wallet for JAMBO dapps",
 	"author": "ixo",
 	"homepage": "https://github.com/ixofoundation/jambo-wallet-sdk#readme",
@@ -73,7 +73,7 @@
 		"@cosmjs/amino": "0.30.1",
 		"@cosmjs/crypto": "0.30.1",
 		"@cosmjs/proto-signing": "0.30.1",
-		"@ixo/cosmos-chain-resolver": "0.0.1",
+		"@ixo/cosmos-chain-resolver": "0.0.2",
 		"bech32": "2.0.0",
 		"bs58": "5.0.0"
 	}
