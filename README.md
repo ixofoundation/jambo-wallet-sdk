@@ -54,7 +54,7 @@ The `OperaWallet` object returned by `getOpera()` includes the following functio
 async enable(chainNameOrId: string, chainNetwork: ChainNetwork = 'mainnet'): Promise<void>
 ```
 
-Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the [@ixo/cosmos-chain-resolver](https://www.npmjs.com/package/@ixo/cosmos-chain-resolver) from the Cosmos or Keplr chain registries and stores is locally for further usage.
+Enables a chain with the given chain ID or name-and-network type. If the chain is not yet enabled, it retrieves the chain info via the [@ixo/cosmos-chain-resolver](https://www.npmjs.com/package/@ixo/cosmos-chain-resolver) from the Cosmos or Keplr chain registries and stores it locally for further usage.
 
 ### experimentalSuggestChain
 
@@ -70,7 +70,21 @@ Suggests a new or custom chain by providing a chain info object. This is very us
 async getKey(chainId: string, includeDid: boolean = false): Promise<OperaKey | undefined>
 ```
 
-Gets the account key for the given chain ID. This key includes the account's name (empty string), the algorithm (secp), pubKey, address, bech32Address and the DID (Decentralized Identifier) if the includeDid flag is set to true.
+Retrieves the account 'key' associated with the provided chain ID. The returned 'key' includes the following fields:
+
+- name: string (an empty string)
+- algo: string (secp256k1)
+- pubKey: uint8Array
+- address: uint8Array
+- bech32Address: string
+- isNanoLedger: boolean (false)
+- isKeystone: boolean (false)
+
+If the `includeDid` flag is set to true, `getKey` also includes the did (Decentralized Identifier) associated with the account key.
+
+Additionally, `getKey` stores the user's data in session storage to be used by the offline signer, so it needs to be called at least once for every session.
+
+To provide a better user experience, we advise against calling `getKey` too frequently. This is because `getKey` requires the user to authenticate via fingerprint scan, facial recognition, or password (depending on the authentication method enabled on their device/opera mobile browser), which may be cumbersome for the user.
 
 ### getOfflineSigner
 
@@ -88,14 +102,21 @@ signDirect(signerAddress: string, signDoc: SignDoc): Promise<DirectSignResponse>
 
 Signs a transaction with the specified signer address.
 
+### **raw** (for advanced developers)
+
+The `__raw__` property exposes the original `interchain` object provided by the OperaWallet on the `window` object. This property is intended for advanced developers who require direct access to the underlying `interchain` object for more complex use cases.
+
+Please note that the OperaWallet's `interchain` object, including the `__raw__` property, is not officially documented. Using it directly may lead to unexpected behavior or errors, and should be done only by developers who have a thorough understanding of how it works and why it is necessary for their use case. If you are unsure whether you need to use `__raw__`, we recommend using the aforementioned documented methods and properties instead.
+
 ## 📱 Example
 
 ```ts
+const opera = getOpera()
+
 // initialize opera with custom chain info
 const initializeOpera = async (chainInfo: ChainInfo): Promise<Key | undefined> => {
 	try {
-		const opera = getOpera();
-		if (!opera) return;
+		if (!opera) throw new Error('Opera not available');
 		await opera.experimentalSuggestChain(chainInfo);
 		await opera.enable(chainInfo.chainId);
 		const key = await opera.getKey(chainInfo.chainId);
@@ -105,13 +126,13 @@ const initializeOpera = async (chainInfo: ChainInfo): Promise<Key | undefined> =
 	}
 };
 
+// or
 // initialize opera using a chain ID
 const chainId = 'ixo-5';
 
 const initializeOpera = async (): Promise<Key | undefined> => {
 	try {
-		const opera = getOpera();
-		if (!opera) return;
+		if (!opera) throw new Error('Opera not available');
 		await opera.enable(chainId);
 		const key = await opera.getKey(chainId);
 		return key;
@@ -119,6 +140,28 @@ const initializeOpera = async (): Promise<Key | undefined> => {
 		console.error('Error initializing Opera:: ' + error);
 	}
 };
+
+// sign transaction with offline signer
+const key = initializeOpera();
+
+const trx = [{
+	typeUrl: '/cosmos.bank.v1beta1.MsgSend'
+	value: {
+		fromAddress: key.bech32Address,
+		toAddress: 'ixo1wnw8t3gc...ezn7xge',
+		amount: [{
+			denom: 'uixo',
+			amount: '1000000'
+		}]
+	}
+}]
+
+const offlineSigner = await opera.getOfflineSigner(chainId);
+
+const signingClient = await createSigningClient(rpcEndpoint, offlineSigner);
+
+// signingClient.signAndBroadcast(signerAddress: string, messages: readonly EncodeObject[], fee: number | StdFee | "auto", memo?: string | undefined)
+await signingClient.signAndBroadcast(key.bech32Address, trx, 'auto', undefined);
 ```
 
 ## 📃 License
