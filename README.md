@@ -111,11 +111,12 @@ Please note that the OperaWallet's `interchain` object, including the `__raw__` 
 ## 📱 Example
 
 ```ts
+const opera = getOpera()
+
 // initialize opera with custom chain info
 const initializeOpera = async (chainInfo: ChainInfo): Promise<Key | undefined> => {
 	try {
-		const opera = getOpera();
-		if (!opera) return;
+		if (!opera) throw new Error('Opera not available');
 		await opera.experimentalSuggestChain(chainInfo);
 		await opera.enable(chainInfo.chainId);
 		const key = await opera.getKey(chainInfo.chainId);
@@ -125,13 +126,13 @@ const initializeOpera = async (chainInfo: ChainInfo): Promise<Key | undefined> =
 	}
 };
 
+// or
 // initialize opera using a chain ID
 const chainId = 'ixo-5';
 
 const initializeOpera = async (): Promise<Key | undefined> => {
 	try {
-		const opera = getOpera();
-		if (!opera) return;
+		if (!opera) throw new Error('Opera not available');
 		await opera.enable(chainId);
 		const key = await opera.getKey(chainId);
 		return key;
@@ -139,6 +140,28 @@ const initializeOpera = async (): Promise<Key | undefined> => {
 		console.error('Error initializing Opera:: ' + error);
 	}
 };
+
+// sign transaction with offline signer
+const key = initializeOpera();
+
+const trx = [{
+	typeUrl: '/cosmos.bank.v1beta1.MsgSend'
+	value: {
+		fromAddress: key.bech32Address,
+		toAddress: 'ixo1wnw8t3gc...ezn7xge',
+		amount: [{
+			denom: 'uixo',
+			amount: '1000000'
+		}]
+	}
+}]
+
+const offlineSigner = await opera.getOfflineSigner(chainId);
+
+const signingClient = await createSigningClient(rpcEndpoint, offlineSigner);
+
+// signingClient.signAndBroadcast(signerAddress: string, messages: readonly EncodeObject[], fee: number | StdFee | "auto", memo?: string | undefined)
+await signingClient.signAndBroadcast(key.bech32Address, trx, 'auto', undefined);
 ```
 
 ## 📃 License
