@@ -106,7 +106,7 @@ Signs a transaction with the specified signer address.
 
 The `__raw__` property exposes the original `interchain` object provided by the OperaWallet on the `window` object. This property is intended for advanced developers who require direct access to the underlying `interchain` object for more complex use cases.
 
-Please note that the OperaWallet's `interchain` object, including the `__raw__` property, is not officially documented. Using it directly may lead to unexpected behavior or errors, and should be done only by developers who have a thorough understanding of how it works and why it is necessary for their use case. If you are unsure whether you need to use `__raw__`, we recommend using the aforementioned documented methods and properties instead.
+Please note that the OperaWallet's `interchain` object, including the `__raw__` property, is not officially documented (except for [this](https://help.opera.com/en/crypto/opera-wallet-integration-guide/)). Using it directly may lead to unexpected behavior or errors, and should be done only by developers who have a thorough understanding of how it works and why it is necessary for their use case. If you are unsure whether you need to use `__raw__`, we recommend using the aforementioned documented methods and properties instead.
 
 ## 📱 Example
 
