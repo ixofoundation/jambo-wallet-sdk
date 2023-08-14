@@ -1,6 +1,6 @@
 {
 	"name": "@ixo/jambo-wallet-sdk",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "An SDK to easily access the Opera mobile wallet for JAMBO dapps",
 	"author": "ixo",
 	"homepage": "https://github.com/ixofoundation/jambo-wallet-sdk#readme",
