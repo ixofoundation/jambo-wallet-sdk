@@ -130,9 +130,13 @@ The `impactsXWallet` object returned by `getImpactsX()` includes the following f
 async impactsXWallet.enable(chainNameOrId: string, chainNetwork: ChainNetwork = 'mainnet'): Promise<void>
 ```
 
-Enables a chain with the given chain ID or name-and-network type. Can only support ixo until further development (and only the chain network active on the mobile app).
+The enable method allows you to activate a specific blockchain chain using either its ID or name-and-network configuration. This functionality currently supports the ixo blockchain only, limited to the chain network active on the mobile app. When utilizing this method, your website's authenticity will also be verified against the ImpactsX whitelist.
 
-This method must be called before invoking any of the other impactsX methods. If it's your webapp's first request to enable a chain, it'll require user approval via biometric/pin authentication. Any consecutive request to enable a previously approved chain will automatically be approved.
+It is crucial to call this method before invoking any other `impactsX` methods to ensure they function correctly. The enabling process only needs to occur once per domain until any significant changes to the domain take place. If your site navigates away from the enabled domain, permissions will reset, requiring the enabling process to be repeated.
+
+Please be aware that the ImpactsX whitelist is administered by Ixo and requests for access should be directed to Ixo. This whitelist operates on a subdomain level, meaning that whitelisting a specific domain (e.g., `jambo.earth`) will not cover subdomains (e.g., `my.jambo.earth``). For subdomains to function seamlessly, they must be individually whitelisted (e.g., my.jambo.earth needs its own whitelisting).
+
+It's important to stay updated with any further developments in the impactsX ecosystem as these details may evolve over time.
 
 ### experimentalSuggestChain
 
