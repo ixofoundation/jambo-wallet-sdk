@@ -1,6 +1,10 @@
-import { toBase64, fromBase64 } from '@cosmjs/encoding';
+import { toBase64, fromBase64, toHex, fromHex } from '@cosmjs/encoding';
+import { AccountData, SignDoc } from '@keplr-wallet/types';
 import { bech32 } from 'bech32';
 import { decode } from 'bs58';
+
+import { ImpactsXAccountData, ImpactsXKey } from '../types/impactsX';
+import { WalletKey } from '../types/wallet';
 
 export const b58_to_uint8Arr = (str: string): Uint8Array => {
 	const uint8Arr = decode(str);
@@ -49,3 +53,61 @@ export const convert_bits = (data: number[], fromBits: number, toBits: number, p
 	}
 	return new Uint8Array(result);
 };
+
+export const uint8Arr_to_hex = (array: Uint8Array): string => {
+	const hex = toHex(array);
+	return hex;
+};
+
+export const hex_to_uint8Arr = (str: string): Uint8Array => {
+	const uint8Arr = fromHex(str);
+	return uint8Arr;
+};
+
+export const stringifyAccountData = (accountData: AccountData): ImpactsXAccountData =>
+	Object.assign(Object.assign({}, accountData), {
+		pubkey: uint8Arr_to_hex(accountData.pubkey),
+	});
+
+export const parseAccountData = (accountData: ImpactsXAccountData): AccountData =>
+	Object.assign(Object.assign({}, accountData), {
+		pubkey: hex_to_uint8Arr(accountData.pubkey),
+	});
+
+export const stringifyKey = (key: WalletKey): ImpactsXKey =>
+	Object.assign(Object.assign({}, key), {
+		pubKey: uint8Arr_to_hex(key.pubKey),
+		address: uint8Arr_to_hex(key.address),
+	});
+
+export const parseKey = (key: ImpactsXKey): WalletKey =>
+	Object.assign(Object.assign({}, key), {
+		pubKey: hex_to_uint8Arr(key.pubKey),
+		address: hex_to_uint8Arr(key.address),
+	});
+
+export const stringifySignDoc = (
+	signDoc: SignDoc,
+): SignDoc & {
+	bodyBytes: string;
+	authInfoBytes: string;
+	accountNumber: string;
+} =>
+	Object.assign(Object.assign({}, signDoc), {
+		bodyBytes: uint8Arr_to_hex(signDoc.bodyBytes),
+		authInfoBytes: uint8Arr_to_hex(signDoc.authInfoBytes),
+		accountNumber: signDoc.accountNumber.toString(),
+	});
+
+export const parseSignDoc = (
+	signDoc: SignDoc & {
+		bodyBytes: string;
+		authInfoBytes: string;
+		accountNumber: string;
+	},
+): SignDoc =>
+	Object.assign(Object.assign({}, signDoc), {
+		bodyBytes: hex_to_uint8Arr(signDoc.bodyBytes),
+		authInfoBytes: hex_to_uint8Arr(signDoc.authInfoBytes),
+		accountNumber: Number(signDoc.accountNumber),
+	});
