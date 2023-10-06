@@ -83,12 +83,14 @@ export const retrievePubKeys = (chainId: string): undefined | OperaKey => {
 	const pubKeys = getSessionStorage(OPERA_PUB_KEYS_KEY) ?? {};
 	const keys = pubKeys[chainId];
 	if (!keys) return undefined;
-	return keys;
+	const pubKey = keys.pubKey ? Uint8Array.from(Object.values(keys.pubKey)) : undefined;
+	return { ...keys, pubKey };
 };
 
 export const retrievePubKeysFromAddress = (address: string): undefined | OperaKey => {
 	const pubKeys = getSessionStorage(OPERA_PUB_KEYS_KEY) ?? {};
 	const keys = Object.values(pubKeys).find((key) => key.bech32Address === address);
 	if (!keys) return undefined;
-	return keys;
+	const pubKey = keys.pubKey ? Uint8Array.from(Object.values(keys.pubKey)) : undefined;
+	return { ...keys, pubKey };
 };
